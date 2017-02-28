@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en-US">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Movie Database</title>
+    <link rel="stylesheet" href="../css/main.css">
+    <link href="https://fonts.googleapis.com/css?family=Righteous" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css?family=Open+Sans" rel="stylesheet">
+</head>
+
+<body>
+    <!--nav-->
+    <nav>
+        <ul class="nav-list">
+            <li id="print-li"><a href="../index.html">Full Movie List</a></li>
+            <li id="popular-li"><a href="../index.html">Popular</a></li>
+            <li id="genres-li">Genres</li>
+            <li id="release-li"><a href="year.html">Release Date</a></li>
+        </ul>
+    </nav>
+    <!--/end nav-->
+
+
+    <!--Checkboxes for selection-->
+    <div>
+        <input type="checkbox" id="comedy" name="comedy">Comedy
+        <input type="checkbox" id="drama" name="drama">Drama
+        <input type="checkbox" id="horror" name="horror">Horror
+        <input type="checkbox" id="thriller" name="thriller">Thriller
+    </div>
+
+    <!--Button for selection-->
+    <button onclick="moviedatabase.getMoviesByGenre">Search</button>
+
+    <!--div for appending-->
+    <div id="result"></div>
+
+    <script src="../js/main.js"></script>
+</body>
+
+</html>

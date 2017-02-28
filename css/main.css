@@ -1,3 +1,37 @@
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  font-family: 'Righteous', cursive; }
+
+a {
+  text-decoration: none;
+  color: white; }
+
+/*navbar format*/
+nav {
+  display: flex;
+  align-content: center;
+  justify-content: center;
+  flex-direction: column;
+  background-color: slateblue; }
+
+/*Makes sure there are no bullet points in the navbar list.*/
+.nav-list {
+  list-style-type: none;
+  margin: 0;
+  padding: 0; }
+
+.nav-list li {
+  float: left;
+  font-size: 1rem;
+  padding: 0 0 0.33rem 0;
+  margin: 0.75rem;
+  font-family: 'Righteous', cursive;
+  color: white; }
+
 html {
   height: 100%; }
 
@@ -6,13 +40,5 @@ body {
   margin: 0;
   font-size: 1rem;
   font-family: 'Open Sans', sans-serif; }
-
-h1,
-h2,
-h3,
-h4,
-h5,
-h6 {
-  font-family: 'Righteous', cursive; }
 
 /*# sourceMappingURL=main.css.map */
