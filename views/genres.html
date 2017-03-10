@@ -15,9 +15,10 @@
     <nav>
         <ul class="nav-list">
             <li id="print-li"><a href="../index.html">Full Movie List</a></li>
-            <li id="popular-li"><a href="../index.html">Popular</a></li>
-            <li id="genres-li">Genres</li>
-            <li id="release-li"><a href="year.html">Release Date</a></li>
+            <li><a href="popular.html">Popular</a></li>
+            <li>Genres</li>
+            <li><a href="year.html">Release Date</a></li>
+            <li><a href="add-movie.html">Add Movie</a></li>
         </ul>
     </nav>
     <!--/end nav-->
@@ -25,14 +26,30 @@
 
     <!--Checkboxes for selection-->
     <div>
-        <input type="checkbox" id="comedy" name="comedy">Comedy
-        <input type="checkbox" id="drama" name="drama">Drama
-        <input type="checkbox" id="horror" name="horror">Horror
-        <input type="checkbox" id="thriller" name="thriller">Thriller
+        <div class="check">
+            <input type="checkbox" value="1" id="comedy" name="comedy" />
+            <label for="comedy"></label>
+            <p class="label">Comedy</p>
+        </div>
+        <div class="check">
+            <input type="checkbox" value="1" id="drama" name="drama" />
+            <label for="drama"></label>
+            <p class="label">Drama</p>
+        </div>
+        <div class="check">
+            <input type="checkbox" value="1" id="horror" name="horror" />
+            <label for="horror"></label>
+            <p class="label">Horror</p>
+        </div>
+        <div class="check">
+            <input type="checkbox" value="1" id="thriller" name="thriller" />
+            <label for="thriller"></label>
+            <p class="label">Thriller</p>
+        </div>
     </div>
 
     <!--Button for selection-->
-    <button onclick="moviedatabase.getMoviesByGenre">Search</button>
+    <button onclick="moviedatabase.getprintMoviesByGenre()">Search</button>
 
     <!--div for appending-->
     <div id="result"></div>

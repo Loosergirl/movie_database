@@ -48,6 +48,14 @@ var moviedatabase = (function () {
         }
               ];
 
+    /*Movie constructor*/
+    /*Konstruktor för filmer*/
+    function Movie(title, year, genres) {
+        this.title = title;
+        this.year = year;
+        this.genres = genres;
+    };
+
     /*returns the average value of all ratings of a movie*/
     /*returnera medelvärdet för alla ratings för en film*/
     var calculateRating = (movie) => {
@@ -77,14 +85,6 @@ var moviedatabase = (function () {
         };
     };
 
-    /*Movie constructor*/
-    /*Konstruktor för filmer*/
-    function Movie(title, year, genres) {
-        this.title = title;
-        this.year = year;
-        this.genres = genres;
-    };
-
     /*adds value of the rate parameter to the ratings property of the Movie object*/
     /*lägger till värdet på parametern rate till egenskapen ratings i objektet Movie.*/
     var rateMovie = (movie, rating) => {
@@ -102,11 +102,32 @@ var moviedatabase = (function () {
 
     /*returns the object corresponding to the movie with the lowest average ratings; unrated movies are ignored.*/
     /*returnerar det objektet som motsvarar den film som har sämst genomsnittligt betyg. Räkna inte med filmer som inte fått något betyg än*/
-    //======================RÄKNA INTE MED FILMER SOM INTE FÅTT BETYG ÄN===================
+    //Obs!!! Att göra: Räkna inte med filmer som inte fått betyg än
     var worstRatedMovie = () => {
         return movies.reduce((prevVal, val) => {
             return prevVal.ratings < val.ratings ? prevVal : val;
         })
+    };
+
+    /*prints the top rated and worst rated movies in an info box*/
+    /*skriver in filmen med högst rating och den med sämst rating i en inforuta*/
+    var printPopularityInfo = () => {
+        /*obtain values & variables*/
+        var best = topRatedMovie();
+        var worst = worstRatedMovie();
+        var info = document.getElementById('popularity-info');
+
+        /*Create and connect elements*/
+        var bestString = document.createTextNode(`Top Rated: ${best.title} (${Math.round(calculateRating(best) * 10) / 10})`);
+        var bestDiv = document.createElement('div');
+        bestDiv.appendChild(bestString);
+        bestDiv.className = "info-inner";
+        var worstString = document.createTextNode(`Worst Rated: ${worst.title} (${Math.round(calculateRating(worst) * 10) / 10})`);
+        var worstDiv = document.createElement('div');
+        worstDiv.className = "info-inner";
+        worstDiv.appendChild(worstString);
+        info.appendChild(bestDiv);
+        info.appendChild(worstDiv);
     };
 
     /*shows movies sorted by popularity*/
@@ -136,32 +157,29 @@ var moviedatabase = (function () {
         }
     };
 
+    /*returns array with genres determined by checkboxes*/
+    /*returnerar array med genres som bestäms av checkboxes*/
+    var determineGenres = () => {
+        var genres = [];
+        if (document.getElementById('comedy').checked === true) {
+            genres.push("Comedy");
+        }
+        if (document.getElementById('drama').checked === true) {
+            genres.push("Drama");
+        }
+        if (document.getElementById('horror').checked === true) {
+            genres.push("Horror");
+        }
+        if (document.getElementById('thriller').checked === true) {
+            genres.push("Thriller");
+        }
+
+        return genres;
+    }
+
     /*returns all movies which have the same genre as the value of the parameter genre (able to filter for multiple genres)*/
     /*returnerar alla filmer som har samma genre som värdet på parametern genre (ska kunna filtrera på flera genrer)*/
     var moviesByGenre = (selection) => {
-
-        /*returns string with all genres, to be used in the header*/
-        var headerString = (function () {
-            var str = '';
-            for (let i = 0; i < selection.length; i++) {
-                str = str + selection[i];
-                if (i < selection.length - 1) {
-                    str = str + ", ";
-                }
-            }
-            return str;
-        })();
-
-        /*Create and connect elements*/
-        var result = document.getElementById('result');
-        result.innerHTML = '';
-        var header = document.createElement('h3');
-        header.innerHTML = headerString;
-        var ul = document.createElement('ul');
-        result.appendChild(header);
-        result.appendChild(ul);
-
-
         /*Filter movies*/
         var genreMovies = [];
         for (let i = 0; i < movies.length; i++) {
@@ -171,33 +189,31 @@ var moviedatabase = (function () {
                 genreMovies.push(movies[i]);
             };
         };
+        return genreMovies;
+    };
 
+    /*prints all movies of the selected genres*/
+    /*printar ut alla filmer med de valda genrerna*/
+    var printMoviesByGenre = () => {
+        /*function call*/
+        var movieArray = moviesByGenre(determineGenres());
 
-        /*
-        var genreMovies = movies.filter((movie, index) => {
-            if (movies[index].genres.some() => {
-                    selection.toUpperCase() ==
-                } == true)
+        /*Create and connect elements*/
+        var result = document.getElementById('result');
+        result.innerHTML = '';
+        var header = document.createElement('h3');
+        header.innerHTML = "Movies by Genre";
+        var ul = document.createElement('ul');
+        result.appendChild(header);
+        result.appendChild(ul);
 
-
-                return movies[index].genres.some((genre) => {
-                return genre == genres ? true : false;
-            }) == true ? movies[index]
-        });
-        */
-
-        /*Loop adding each movie*/
-        /*
-            for (let i = 0 < i < genreMovies.length; i++) {
-            let li = document.createElement('li');
-            let innerLi = document.createTextNode(genreMovies[i].title);
+        /*Loop adding the movies*/
+        for (let i = 0; i < movieArray.length; i++) {
+            var li = document.createElement('li');
+            var innerLi = document.createTextNode(movieArray[i].title);
             li.appendChild(innerLi);
             ul.appendChild(li);
         }
-
-*/
-        return genreMovies;
-
     };
 
 
@@ -217,7 +233,7 @@ var moviedatabase = (function () {
 
     var printMoviesByYear = () => {
         /*Obtain the year in question from the user*/
-        var search = document.getElementById('search');
+        var search = document.getElementById('year');
         var year = search.value;
 
         /*Find movies released this year*/
@@ -276,14 +292,10 @@ var moviedatabase = (function () {
     return {
         getPrintMovies: printMovies,
         getPopularMovies: popularMovies,
-        getMoviesByGenre: moviesByGenre,
+        getprintMoviesByGenre: printMoviesByGenre,
         getprintMoviesByYear: printMoviesByYear,
         getTopRatedMovie: topRatedMovie,
         getWorstRatedMovie: worstRatedMovie,
+        getPrintPopularityInfo: printPopularityInfo
     }
 })();
-
-/*===EVENT LISTENERS===*/
-document.getElementById('print-li').addEventListener('click', moviedatabase.getPrintMovies);
-
-document.getElementById('popular-li').addEventListener('click', moviedatabase.getPopularMovies);
