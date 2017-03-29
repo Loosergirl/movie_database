@@ -25,6 +25,8 @@ input[type=text] {
 
 
 /*===Checkboxes===*/
+/*The design for these checkboxes was obtained from https://codepen.io/bbodine1/pen/novBm
+        Basically, the labels are designed to look like checkboxes, since the checkboxes themselves can't be styled. The check-mark (v) is actually part of the border from a div which has been rotated.*/
 
 input[type="checkbox"] {
 	visibility: hidden;
@@ -78,6 +80,8 @@ input[type="checkbox"] {
 
 
 /*===STYLED SELECT===*/
+/*The design for the select and options was obtained from https://codepen.io/ericrasch/pen/zjDBx
+This is to get rid of the boring, default, appearance of the select as well as to improve readability (the default is small).*/
 
 .select-positioner {
 	margin: 1.25rem 1.25rem 1.25rem 0;
