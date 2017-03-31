@@ -100,6 +100,7 @@ var moviedatabase = (function () {
     /*lägger till värdet på parametern rate till egenskapen ratings i objektet Movie.*/
     var rateMovie = (movie, rating) => {
         movie.ratings.push(rating);
+        return movie;
     };
 
 
@@ -167,7 +168,7 @@ var moviedatabase = (function () {
             genres.push("Drama");
         }
         if (document.getElementById('horror').checked === true) {
-            genres.push(" Horror");
+            genres.push("Horror");
         }
         if (document.getElementById('thriller').checked === true) {
             genres.push("Thriller");
@@ -314,13 +315,136 @@ var moviedatabase = (function () {
         }
         return str;
     };
-    
-    var modify = (movie) => {
+
+    /*Show all movies with radio buttons*/
+    /*Visa alla filmer med radio buttons*/
+    var movieSelectionList = () => {
+        /*Get ul-element*/
+        var ul = document.getElementById('movie-selection-ul');
+
+        /*Loop adding each movie*/
+        for (let i = 0; i < movies.length; i++) {
+            var li = document.createElement('li');
+
+            li.innerHTML = `${movies[i].title}
+<input type="radio" name="movie-selection-radio" id="${movies[i].title}" class="movie-selection-radio">`;
+            ul.appendChild(li);
+        };
+    };
+
+    /*Find out which radio button was selected, return corresponding movie*/
+    /*Ta reda på vilken radio button som var vald, returnera motsvarande film*/
+    var obtainMovieSelectionListAnswer = () => {
+        /*Obtain radio buttons*/
+        var radios = document.getElementsByClassName('movie-selection-radio');
+        var movieTitle = '';
+
+        /*Find out which radio button is checked*/
+        for (let i = 0; i < radios.length; i++) {
+            if (radios[i].checked === true) {
+                movieTitle = radios[i].id;
+            }
+        }
+        console.log(movieTitle);
+
+        /*Declare a movie*/
+        var movie;
+
+        /*Find out which movie that radio button represented*/
+        for (let i = 0; i < movies.length; i++) {
+            if (movies[i].title === movieTitle) {
+                movie = movies[i];
+            }
+        };
+
+        return movie;
+    };
+
+
+    /*Double of determineGenres() with alternative id:s for checkboxes. Used when there are two sets of checkboxes for genres present.*/
+    /*Dublett för determineGenres() med alternative id:n för checkboxes. Används när det finns två grupper med checkboxes för genres*/
+    var determineGenresForRemoval = () => {
+        var genres = [];
+        if (document.getElementById('comedy-r').checked === true) {
+            genres.push("Comedy");
+        }
+        if (document.getElementById('drama-r').checked === true) {
+            genres.push("Drama");
+        }
+        if (document.getElementById('horror-r').checked === true) {
+            genres.push("Horror");
+        }
+        if (document.getElementById('thriller-r').checked === true) {
+            genres.push("Thriller");
+        }
+
+        return genres;
+    };
+
+    /*Obtain rating from a select input*/
+    /*Ta fram rating från en select input*/
+    var determineRating = () => {
+        var rating = [parseInt(document.getElementById('rating').value)];
+        return rating;
+    };
+
+    /*If the property values of the inputted movie are different from those of the movie it is based off, the 'base movie' is changed*/
+    /*Om property-värdena hos filmen som matas in skiljer sig från de hos filmen den inmatade är baserad på kommer 'basfilmen' ändras*/
+    var modifyMoviePropertyValues = (movie) => {
+        for (let i = 0; i < movies.length; i++) {
+            if (movie.title === movies[i].title) {
+                movies[i] = movie;
+            }
+        }
+    };
+
+    /*Ties together several functions to be used on the same event listener*/
+    /*Binder samman flera funktioner så att de kan användas på samma event listener*/
+    var addGenresTieUp = () => {
+        /*Obtain movie and genres*/
+        var movie = obtainMovieSelectionListAnswer();
+        console.log(movie);
+        var genres = determineGenres();
+        console.log(genres);
         
+        /*Add genres*/
+        movie = addGenres(movie, genres);
+        console.log("2. " + movie)
+
+        /*Modify movie*/
+        modifyMoviePropertyValues(movie);
+        console.log(movies);
+    };
+
+    /*Ties together several functions to be used on the same event listener*/
+    /*Binder samman flera funktioner så att de kan användas på samma event listener*/
+    var removeGenresTieUp = () => {
+        /*Obtain movie and genres*/
+        var movie = obtainMovieSelectionListAnswer();
+        var genres = determineGenresForRemoval();
+
+        /*Remove genres*/
+        movie = removeGenres(movie, genres);
+
+        /*Modify movie*/
+        modifyMoviePropertyValues(movie);
+    };
+
+    var addRatingTieUp = () => {
+        /*Obtain movie and rating*/
+        var movie = obtainMovieSelectionListAnswer();
+        var rating = determineRating();
+
+        /*Rate the movie*/
+        rateMovie(movie, rating);
+
+        /*Modify movie*/
+        modifyMoviePropertyValues(movie);
     };
 
 
     /*===PUBLIC===*/
+    /*For some reason, I put 'get' in front of all these methods...*/
     return {
         getPrintMovies: printMovies,
         getPopularMovies: popularMovies,
@@ -330,7 +454,14 @@ var moviedatabase = (function () {
         getWorstRatedMovie: worstRatedMovie,
         getPrintPopularityInfo: printPopularityInfo,
         getAddMovie: addMovie,
-        getArrayToString: arrayToString
+        getArrayToString: arrayToString,
+        getMovieSelectionList: movieSelectionList,
+        getObtainMovieSelectionListAnswer: obtainMovieSelectionListAnswer,
+        getDetermineGenresForRemoval: determineGenresForRemoval,
+        getDetermineRating: determineRating,
+        getAddGenresTieUp: addGenresTieUp,
+        getRemoveGenresTieUp: removeGenresTieUp,
+        getAddRatingTieUp: addRatingTieUp
     }
 })();
 
@@ -510,43 +641,24 @@ This is to get rid of the boring, default, appearance of the select as well as t
         <div id="confirm"></div>`;
     };
     
+    var modifyPageEventListeners = () => {
+      document.getElementById('add-genres-btn').addEventListener('click', moviedatabase.getAddGenresTieUp);
+        document.getElementById('remove-genres-btn').addEventListener('click', moviedatabase.getRemoveGenresTieUp);
+        document.getElementById('add-rating-btn').addEventListener('click', moviedatabase.getAddRatingTieUp);
+    };
+
     var modify = () => {
         /*obtain content*/
         var content = document.getElementById('content');
 
         /*Clear content*/
         content.innerHTML = '';
-        
+
         /*Add content*/
         content.innerHTML = `<div id="result">
     <h3>Select movie</h3>
     <ul id="movie-selection-ul"></ul>
-
-    <h3>Remove genres</h3>
-    <div class="indentation">
-        <div class="check">
-            <input type="checkbox" value="1" id="comedy" name="comedy" />
-            <label for="comedy"></label>
-            <p class="label">Comedy</p>
-        </div>
-        <div class="check">
-            <input type="checkbox" value="1" id="drama" name="drama" />
-            <label for="drama"></label>
-            <p class="label">Drama</p>
-        </div>
-        <div class="check">
-            <input type="checkbox" value="1" id="horror" name="horror" />
-            <label for="horror"></label>
-            <p class="label">Horror</p>
-        </div>
-        <div class="check">
-            <input type="checkbox" value="1" id="thriller" name="thriller" />
-            <label for="thriller"></label>
-            <p class="label">Thriller</p>
-        </div>
-        <button>Remove</button>
-    </div>
-
+    
     <h3>Add genres</h3>
     <div class="indentation">
         <div class="check">
@@ -569,7 +681,32 @@ This is to get rid of the boring, default, appearance of the select as well as t
             <label for="thriller"></label>
             <p class="label">Thriller</p>
         </div>
-        <button>Add</button>
+        <button id="add-genres-btn">Add</button>
+    </div>
+
+    <h3>Remove genres</h3>
+    <div class="indentation">
+        <div class="check">
+            <input type="checkbox" value="1" id="comedy-r" name="comedy-r" />
+            <label for="comedy-r"></label>
+            <p class="label">Comedy</p>
+        </div>
+        <div class="check">
+            <input type="checkbox" value="1" id="drama-r" name="drama-r" />
+            <label for="drama-r"></label>
+            <p class="label">Drama</p>
+        </div>
+        <div class="check">
+            <input type="checkbox" value="1" id="horror-r" name="horror-r" />
+            <label for="horror-r"></label>
+            <p class="label">Horror</p>
+        </div>
+        <div class="check">
+            <input type="checkbox" value="1" id="thriller-r" name="thriller-r" />
+            <label for="thriller-r"></label>
+            <p class="label">Thriller</p>
+        </div>
+        <button id="remove-genres-btn">Remove</button>
     </div>
 
     <h3>Rate movie</h3>
@@ -591,10 +728,15 @@ This is to get rid of the boring, default, appearance of the select as well as t
                 </select>
             </div>
         </div>
-        <button>Rate</button>
+        <button id="add-rating-btn">Rate</button>
     </div>
-</div>
-`;
+</div>`;
+
+        /*Function call to fill out the list of movies available to change*/
+        moviedatabase.getMovieSelectionList();
+        
+        /*Add event listeners*/
+        modifyPageEventListeners();
     };
 
     /*Adding event listeners for nav*/
@@ -607,12 +749,12 @@ This is to get rid of the boring, default, appearance of the select as well as t
         document.getElementById('modify-li').addEventListener('click', modify);
 
     };
-    
+
     return {
         autoAddEventListeners: autoAddEventListeners
     };
 })();
 
-var init = (function() {
+var init = (function () {
     subpages.autoAddEventListeners();
 })();
