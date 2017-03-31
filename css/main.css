@@ -76,6 +76,8 @@ input[type=text] {
   padding: 0.31rem; }
 
 /*===Checkboxes===*/
+/*The design for these checkboxes was obtained from https://codepen.io/bbodine1/pen/novBm
+        Basically, the labels are designed to look like checkboxes, since the checkboxes themselves can't be styled. The check-mark (v) is actually part of the border from a div which has been rotated.*/
 input[type="checkbox"] {
   visibility: hidden; }
 
@@ -120,6 +122,8 @@ input[type="checkbox"] {
   margin: 0 0 0 2rem; }
 
 /*===STYLED SELECT===*/
+/*The design for the select and options was obtained from https://codepen.io/ericrasch/pen/zjDBx
+This is to get rid of the boring, default, appearance of the select as well as to improve readability (the default is small).*/
 .select-positioner {
   margin: 1.25rem 1.25rem 1.25rem 0; }
 
@@ -147,6 +151,11 @@ input[type="checkbox"] {
 
 .slate select {
   color: #000; }
+
+#movie-selection-div div {
+  display: flex;
+  flex-flow: row nowrap;
+  margin-bottom: 1rem; }
 
 html {
   height: 100%; }
